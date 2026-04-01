@@ -1,3 +1,3 @@
 interface Pembayaran {
-    void bayar(double jumlah);
+    void bayar(int jumlah);
 }
