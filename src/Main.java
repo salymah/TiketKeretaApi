@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class Main {
@@ -5,35 +7,60 @@ public class Main {
 
         Scanner input = new Scanner(System.in);
 
-        // Input nama & tujuan
-        System.out.print("Masukkan nama penumpang: ");
-        String nama = input.nextLine();
+        // 🔹 List kereta (dynamic)
+        List<Kereta> daftarKereta = new ArrayList<>();
 
-        System.out.print("Masukkan tujuan: ");
-        String tujuan = input.nextLine();
+        daftarKereta.add(new Kereta("KA Ekonomi", "Bandung", 100000, "Ekonomi"));
+        daftarKereta.add(new Kereta("KA Bisnis", "Jakarta", 200000, "Bisnis"));
+        daftarKereta.add(new Kereta("KA Eksekutif", "Surabaya", 300000, "Bisnis"));
 
-        // Pilih jenis tiket
-        System.out.println("Pilih jenis tiket:");
-        System.out.println("1. Ekonomi");
-        System.out.println("2. Bisnis");
-        System.out.print("Pilihan: ");
-        int pilihan = input.nextInt();
-
-        Tiket tiket;
-
-        if (pilihan == 1) {
-            tiket = new TiketEkonomi(nama, tujuan);
-        } else {
-            tiket = new TiketBisnis(nama, tujuan);
+        // 🔹 Tampilkan semua kereta
+        System.out.println("=== DAFTAR KERETA ===");
+        for (int i = 0; i < daftarKereta.size(); i++) {
+            Kereta k = daftarKereta.get(i);
+            System.out.println((i + 1) + ". " + k.getNama() +
+                    " - " + k.getTujuan() +
+                    " - " + k.getHarga());
         }
 
-        // Output tiket
-        System.out.println("\n=== DATA TIKET ===");
-        System.out.println("Penumpang: " + tiket.getNamaPenumpang());
-        System.out.println("Tujuan: " + tiket.getTujuan());
-        System.out.println("Harga: " + (int)tiket.hitungHarga());
+        // 🔹 Input pilihan kereta
+        System.out.print("\nPilih kereta (1-3): ");
+        int pilihan = input.nextInt();
 
-        // Pilih pembayaran
+        Kereta pilihKereta = daftarKereta.get(pilihan - 1);
+
+        input.nextLine(); // buang enter
+
+        // 🔹 Input nama penumpang
+        System.out.print("Masukkan nama penumpang: ");
+        String namaPenumpang = input.nextLine();
+
+        // 🔹 Tentukan jenis tiket
+        Tiket tiket;
+        if (pilihKereta.getJenis().equals("Ekonomi")) {
+            tiket = new TiketEkonomi(namaPenumpang, pilihKereta.getTujuan());
+        } else {
+            tiket = new TiketBisnis(namaPenumpang, pilihKereta.getTujuan());
+        }
+
+        // 🔹 Input jumlah tiket
+        System.out.print("Masukkan jumlah tiket: ");
+        int jumlahTiket = input.nextInt();
+
+        int hargaSatuan = pilihKereta.getHarga();
+        int totalHarga = hargaSatuan * jumlahTiket;
+
+        // 🔹 Output
+        System.out.println("\n=== DATA TIKET ===");
+        System.out.println("Penumpang: " + namaPenumpang);
+        System.out.println("Kereta: " + pilihKereta.getNama());
+        System.out.println("Tujuan: " + pilihKereta.getTujuan());
+        System.out.println("Jenis: " + pilihKereta.getJenis());
+        System.out.println("Jumlah Tiket: " + jumlahTiket);
+        System.out.println("Harga per Tiket: " + hargaSatuan);
+        System.out.println("Total Harga: " + totalHarga);
+
+        // 🔹 Pilih pembayaran
         System.out.println("\nPilih metode pembayaran:");
         System.out.println("1. Transfer");
         System.out.println("2. E-Wallet");
@@ -41,14 +68,13 @@ public class Main {
         int bayar = input.nextInt();
 
         Pembayaran pembayaran;
-
         if (bayar == 1) {
             pembayaran = new PembayaranTransfer();
         } else {
             pembayaran = new PembayaranEWallet();
         }
 
-        pembayaran.bayar((int)tiket.hitungHarga());
+        pembayaran.bayar(totalHarga);
 
         input.close();
     }
