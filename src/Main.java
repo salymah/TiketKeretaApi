@@ -7,6 +7,7 @@ public class Main {
 
         Scanner input = new Scanner(System.in);
 
+
         // 🔹 List kereta (dynamic)
         List<Kereta> daftarKereta = new ArrayList<>();
 
@@ -24,7 +25,10 @@ public class Main {
         }
 
         // 🔹 Input pilihan kereta
-        System.out.print("\nPilih kereta (1-3): ");
+
+
+        try {
+            System.out.print("\nPilih kereta (1-3): ");
         int pilihan = input.nextInt();
 
         Kereta pilihKereta = daftarKereta.get(pilihan - 1);
@@ -32,8 +36,26 @@ public class Main {
         input.nextLine(); // buang enter
 
         // 🔹 Input nama penumpang
+        String namaPenumpang;
+
+    while (true) {
+    try {
         System.out.print("Masukkan nama penumpang: ");
-        String namaPenumpang = input.nextLine();
+        namaPenumpang = input.nextLine();
+
+        if (!namaPenumpang.matches("[a-zA-Z ]+")) {
+            throw new Exception("Nama harus huruf saja!");
+        }
+
+        break;
+
+    } catch (Exception e) {
+        System.out.println(e.getMessage());
+    }
+}
+        
+
+
 
         // 🔹 Tentukan jenis tiket
         Tiket tiket;
@@ -76,6 +98,16 @@ public class Main {
 
         pembayaran.bayar(totalHarga);
 
-        input.close();
-    }
+        } catch (Exception e) {
+            System.out.println("silahkan coba lagi \n" + e.getMessage());
+            // TODO: handle exception
+        } finally {
+            System.out.println("program selesai");
+
+
+
+        }
+
+
+  }
 }
